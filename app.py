@@ -13,6 +13,7 @@ with open("skills.txt", "r") as f:
         for skill in f.readlines()
     ]
 
+
 # Extract Resume Text 
 def extract_text_from_pdf(file):
     text = ""
@@ -22,6 +23,7 @@ def extract_text_from_pdf(file):
             if page_text:
                 text += page_text + " "
     return text
+
 
 # Extract Skills 
 def extract_skills(text):
@@ -34,6 +36,7 @@ def extract_skills(text):
             found_skills.append(skill)
     
     return sorted(list(set(found_skills)))
+
 
 # ATS Score
 def calculate_match_score(resume_skills, jd_skills):
@@ -48,17 +51,36 @@ def calculate_match_score(resume_skills, jd_skills):
     return score, matched, missing
 
 
+# Skill Formatting
+def format_skill(skill):
+
+    acronyms = {
+        "sql": "SQL",
+        "aws": "AWS",
+        "html": "HTML",
+        "css": "CSS",
+        "api": "API",
+        "etl": "ETL",
+        "sap": "SAP",
+        "gcp": "GCP",
+        "git": "Git",
+        "mysql": "MySQL"
+    }
+
+    if skill.lower() in acronyms:
+        return acronyms[skill.lower()]
+
+    return skill.title()
+
 
 # Page Config
-
-st.ste_page_config(
+st.set_page_config(
     page_title = "Resume Screening System",
     page_icon = "📄",
     layout = "wide"
 )
 
 # Header
-
 st.title("Resume Screening System")
 
 st.markdown(
@@ -74,8 +96,8 @@ st.markdown(
     """
 )
 
-# Inputs
 
+# Inputs
 col1, col2 = st.columns(2)
 
 with col1:
@@ -110,48 +132,29 @@ if uploaded_resume and job_description:
         st.subheader("ATS Match Score")
         st.progress(int(score))
 
-        st.metric("Score", f"{score}%")
+        st.write(f"### {score}%")
 
     st.divider()
 
     # Skills
-
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Resume Skills")
-
-        if resume_skills:
-            for skill in resume_skills:
-                st.write(f"{skill}")
-        else:
-            st.warning("No skills detected")
-        
-    with col2:
         st.subheader("Matched Skills")
 
         if matched:
             for skill in sorted(matched):
-                st.success(skill)
+                st.success(format_skill(skill))
         else:
             st.warning("No matching skills")
     
-    with col3:
+    with col2:
         st.subheader("Missing Skills")
 
         if missing:
             for skill in sorted(missing):
-                st.error(skill)
+                st.error(format_skill(skill))
         else:
             st.success("No missing skills")
 
     st.divider()
-
-    st.subheader("Resume Preview")
-
-    st.text_area(
-        "Extracted Resume Text",
-        resume_text[:3000],
-        height=250
-    )
-
