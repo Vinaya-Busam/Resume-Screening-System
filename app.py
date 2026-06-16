@@ -85,14 +85,9 @@ st.title("Resume Screening System")
 
 st.markdown(
     """
-    Upload a resume and compare it with a Job Description.
+    #### Upload a resume and compare it with a Job Description.
+
     
-    The system will:
-    - Predict candidate category
-    - Extract skills
-    - Calculate ATS score
-    - Show matched skills
-    - Show missing skills
     """
 )
 
@@ -104,7 +99,7 @@ with col1:
     uploaded_resume = st.file_uploader("Upload Resume (PDF)", type=["pdf"]) 
 
 with col2:
-    job_description = st.text_area("Paste Job Description Here", height=250)
+    job_description = st.text_area("Paste Job Description Here", height=200)
 
 
 # Analysis
@@ -125,7 +120,7 @@ if uploaded_resume and job_description:
     # Results
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("Predicted Category")
+        st.subheader("Predicted Candidate Category")
         st.success(predicted_category)
     
     with col2:
